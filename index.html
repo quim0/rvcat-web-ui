@@ -1,79 +1,115 @@
-<!DOCTYPE html>   
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>RVCAT | Online computer architecure simulator</title>
-    <meta name="description" content="">
-    <meta name="keywords" content="" />
-    <meta name="author" content="">
-    <!--<link href="styles/common.css" rel="stylesheet" type="text/css">-->
-    <link href="styles/main.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RVCAT Web</title>
+    <link rel="stylesheet" href="styles/main.css">
 </head>
- 
 <body>
-    <!--<header>
-        <div class="menu_logo">
-            <h1><a href="/">RVCAT</a></h1>
+    <header>
+        <div>
+            <h1>RVCAT</h1>
+            <h2>Web edition</h2>
         </div>
-        <nav class="menu_list">
-            <a class="menu_item" href="index.html">Home</a>
-            <a class="menu_item" href="about.html">About</a>
+
+        <nav class="menu">
+            <ul>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#assignments">Assignments</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
         </nav>
-    </header>-->
+    </header>
 
     <div class="blur-overlay" id="blur-overlay-item"></div>
     <div class="overlay" id="loading-overlay">
-        <p>LOADING Python and RVCAT... WAIT (can take several seconds)</p>
+        <div class="spinner"></div>
+        <p id="loading-overlay-message">Initializing</p>
+        <p>Please wait, this process can take several seconds</p>
     </div>
 
-    <div id="main-container">
-        <section id="rvcat-header">
-            <div id="rvcat-config">
-                <div>
-                    <label for="program">Program</label>
-                    <select name="program" id="programs-list" onchange="programShow()">
-                    </select>
-
-                    <label for="processor">Processor</label>
-                    <select name="processor" id="processors-list" onchange="programShow()">
-                    </select>
-                    <label for="num-iters">Number of iterations</label>
-                    <input id="num-iters" type="number" value="3" min="1">
-
-                    <label for="ROB size">ROB size</label>
-                    <input id="rob-size" type="number" value="100" min="1">
-                </div>
-
-                <div>
-                    <input type="button" value="Dependencies" onclick="programShowDependencies();">
-                    <input type="button" value="Execution Resources" onclick="programShowExecution();">
-                    <input type="button" value="Memory trace" onclick="programShowMemtrace();">
-                    <input type="button" value="Performance analysis (static)" onclick="programShowAnalysis();">
-                </div>
-
-
-                <div id="rvcat-output" class="terminal-text"></div>
-
-            </div>
-
-            <div id="rvcat-info-show">
-                <h2>Program</h2>
-                <div id="rvcat-program-show" class="terminal-text"></div>
-
-
-                <h2>Processor</h2>
-                <div id="rvcat-processor-show" class="terminal-text">Not implemented yet</div>
+    <main class="container">
+        <!-- Processor Pipeline -->
+        <section class="main-box pipeline-display">
+            <h3>Processor Pipeline</h3>
+            <div class="processor-info">
+                <div class="pipeline-img" id="pipeline-graph"></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Port Number</th>
+                            <th>Supported Instructions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="processor-info-table-body">
+                    </tbody>
+                </table>
             </div>
         </section>
 
-    </div>
+        <!-- Main Content Row -->
+        <div class="main-content-row">
+            <!-- Simulation Settings -->
+            <section class="main-box input-section">
+                <h3>Simulation Settings</h3>
+                <form id="simulator-form">
+                    <label for="programs-list">Program:</label>
+                    <select id="programs-list" name="assembly-code" onchange="reloadRvcat();">
+                        <!-- <option value="loop1">Loop 1</option> -->
+                    </select>
 
+                    <label for="processors-list">Processor:</label>
+                    <select id="processors-list" name="processor-name" onchange="reloadRvcat();">
+                        <!-- <option value="model1">Model 1</option> -->
+                    </select>
+
+                    <label for="iterations">Number of Iterations:</label>
+                    <input type="number" id="num-iters" name="iterations" min="1" max="10000" value="10">
+
+                    <label for="rob-size">ROB Size:</label>
+                    <input type="number" id="rob-size" name="rob-size" min="1" max="10000" value="100">
+                </form>
+            </section>
+
+            <!-- Assembly Code -->
+            <section class="main-box code-block">
+                <h3>Assembly Code</h3>
+                <pre>
+<code id="rvcat-asm-code">LOADING</code>
+            </pre>
+            </section>
+        </div>
+    </main>
+
+    <!-- Output Section -->
+    <section class="output-section">
+        <h3>Simulation Results</h3>
+        <div class="tabs">
+            <button class="tab-button" id="dependencies-output" onclick="showDependenciesGraph();">Dependencies</button>
+            <button class="tab-button" id="critical-paths-output" onclick="showCriticalPathsGraph();">Critical paths</button>
+            <button class="tab-button" id="performance-analysis-output" onclick="alert('Not implemented yet!')">Performance Analysis</button>
+        </div>
+
+        <div class="output-block" id="simulation-output">
+        </div>
+    </section>
+
+    <footer>
+        <p>The RVCAT developers © 2024</p>
+    </footer>
+
+    <!-- <script src="https://unpkg.com/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script> -->
     <script src="js/rvcat_code.js"></script>
     <script src="js/rvcat.js"></script>
-
+    <script src="js/processor.js"></script>
+    <script>
+        openLoadingOverlay();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
     <script>
         initPyodide();
     </script>
-
 </body>
 </html>

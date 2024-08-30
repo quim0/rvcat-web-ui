@@ -9,13 +9,15 @@ rvcat._processor.list_processors_json()
 // SHOW program
 const PROG_SHOW              = 'str(rvcat._program)'
 const PROG_SHOW_DEPENDENCIES = `rvcat._program.show_dependencies()`
+const PROG_SHOW_DEPENDENCIES_GRAPHVIZ = `rvcat._program.get_dependencies_grapviz(num_iters=3)`
+const PROG_SHOW_CRITICAL_PATHS_GRAPHVIZ = `rvcat._program.get_recurrent_paths_graphviz()`
 const PROG_SHOW_ANNOTATED    = `rvcat._program.annotate_action()`
 const PROG_SHOW_EXECUTION    = `rvcat._program.annotate_execution()`
 const PROG_SHOW_MEMORY       = `rvcat._program.show_memory_trace()`
 const PROG_SHOW_STATIC_PERFORMANCE = `rvcat._program.show_static_performance_analysis()`
 
 // SHOW processor
-const SHOW_PROCESSOR = 'str(rvcat._processor)'
+const SHOW_PROCESSOR = 'rvcat._processor.json()'
 
 // SHOW isa
 const SHOW_ISA = 'str(rvcat._isa)'

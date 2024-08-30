@@ -6,6 +6,7 @@ async function initialize() {
         self.pyodide = await loadPyodide();
         await loadPackage('numpy')
         await loadPackage('https://quim0.github.io/rvcat-web-ui/rvcat-0.1-py3-none-any.whl')
+        //await loadPackage('http://0.0.0.0:8000/rvcat-0.1-py3-none-any.whl')
     }
 }
 
