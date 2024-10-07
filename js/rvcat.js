@@ -177,14 +177,15 @@ function currentIterations() {
 }
 
 function currentROBSize() {
-    let rs = document.getElementById('rob-size').value;
+    let elem = document.getElementById('rob-size');
+    let rs = elem.value;
     if (rs === '') {
-        rs = 100;
+        elem.value = rs;
     }
     if (rs > MAX_ROB_SIZE) {
-        rs = MAX_ROB_SIZE;
+        elem.value = rs;
     }
-    return rs;
+    return elem.value;
 }
 
 // Commands
