@@ -14,7 +14,7 @@ header {
     justify-content: space-between;
     align-items: center;
     background-color: #007acc;
-    color: white;
+    color: white !important;
     padding: 15px 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     box-sizing: border-box; /* Ensure consistent sizing */
@@ -30,6 +30,11 @@ header h2 {
     font-size: small;
     font-style: italic;
     font-weight: normal;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
 }
 
 
