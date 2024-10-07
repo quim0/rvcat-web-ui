@@ -87,7 +87,7 @@ function construct_processor_dot(dispatch_width, num_ports, retire_width, usage=
     `
     if (usage !== null) {
         let dispatch_color = color[Math.floor(usage.dispatch / 10)];
-        dot_code += `Dispatch[shape=box,height=1.5,width=1.5,label="Dispatch\nw=${dispatch_width}\n", style=filled, fillcolor="${dispatch_color}"]\n`
+        dot_code += `Dispatch[shape=box,height=1.5,width=1.5,label="Dispatch\nw=${dispatch_width}\n", style=filled, fillcolor="${dispatch_color}", tooltip="Usage: ${usage.dispatch.toFixed(1)}%"]\n`
     } else {
         dot_code += `Dispatch[shape=box,height=1.5,width=1.5,label="Dispatch\nw=${dispatch_width}"]\n`
     }
@@ -102,7 +102,7 @@ function construct_processor_dot(dispatch_width, num_ports, retire_width, usage=
     for (let i = 0; i < num_ports; i++) {
         if (usage !== null) {
             let execute_color = color[Math.floor(usage.ports[i] / 10)];
-            dot_code += `P${i} [shape=box3d,height=0.15, style=filled, fillcolor="${execute_color}"];\n`
+            dot_code += `P${i} [shape=box3d,height=0.15, style=filled, fillcolor="${execute_color}", tooltip="Usage: ${usage.ports[i].toFixed(1)}%"];\n`
         } else {
             dot_code += `P${i} [shape=box3d,height=0.15];\n`
         }
@@ -126,7 +126,7 @@ function construct_processor_dot(dispatch_width, num_ports, retire_width, usage=
     // --- RETIRE ---
     if (usage !== null) {
         let retire_color = color[Math.floor(usage.retire / 10)];
-        dot_code += `Retire[shape=box,height=1.5,width=1.5,label="Retire\nw=${retire_width}", style=filled, fillcolor="${retire_color}"]`
+        dot_code += `Retire[shape=box,height=1.5,width=1.5,label="Retire\nw=${retire_width}", style=filled, fillcolor="${retire_color}", tooltip="Usage: ${usage.retire.toFixed(1)}%"]`
     } else {
         dot_code += `Retire[shape=box,height=1.5,width=1.5,label="Retire\nw=${retire_width}"]`
     }

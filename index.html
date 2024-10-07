@@ -66,7 +66,7 @@
         <div class="main-content-row">
             <!-- Simulation Settings -->
             <section class="main-box input-section">
-                <h3>Simulation Settings</h3>
+                <h3>Simulation</h3>
                 <form id="simulator-form">
                     <label for="programs-list">Program:</label>
                     <select id="programs-list" name="assembly-code" onchange="reloadRvcat();">
@@ -83,6 +83,24 @@
 
                     <label for="rob-size">ROB Size:</label>
                     <input type="number" id="rob-size" name="rob-size" min="1" max="1000" value="100" >
+                    <div class="simulation-inline-output">
+                        <div class="simulation-inline-item">
+                            <label for="instructions">Instructions:</label>
+                            <span id="instructions-output">?</span>
+                        </div>
+                        <div class="simulation-inline-item">
+                            <label for="cycles">Cycles:</label>
+                            <span id="cycles-output">?</span>
+                        </div>
+                        <div class="simulation-inline-item">
+                            <label for="IPC">IPC:</label>
+                            <span id="IPC-output">?</span>
+                        </div>
+                        <div class="simulation-inline-item">
+                            <label for="cycles-per-iteration">Cycles per iteration:</label>
+                            <span id="cycles-per-iteration-output">?</span>
+                        </div>
+                    </div>
                     <button id="run-simulation-button" type="button" onclick="getSchedulerAnalysis();">
                         <div id="run-simulation-spinner" class="spinner-small" style="display: none;"></div>
                         <div id="run-simulation-text">Run simulation</div></button>
@@ -91,7 +109,7 @@
 
             <!-- Assembly Code -->
             <section class="main-box code-block">
-                <h3>Assembly Code</h3>
+                <h3>Program and performance annotations</h3>
                 <pre>
                 <code id="rvcat-asm-code">LOADING</code>
                 </pre>

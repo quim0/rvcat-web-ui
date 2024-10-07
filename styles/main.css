@@ -121,6 +121,24 @@ main.container {
     grid-column: span 1;
 }
 
+.simulation-inline-output {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.simulation-inline-output label {
+    font-size: small;
+}
+
+.simulation-inline-output span {
+    text-align: right;
+}
+
+.simulation-inline-item {
+    text-align: right;
+}
+
 .code-block {
     overflow-x: auto;
 }

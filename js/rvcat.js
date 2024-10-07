@@ -90,6 +90,13 @@ const handlers = {
             document.getElementById('run-simulation-button').disabled = false;
             return;
         }
+
+        document.getElementById('instructions-output').innerHTML = d["total_instructions"];
+        document.getElementById('cycles-output').innerHTML = d["total_cycles"];
+        document.getElementById('IPC-output').innerHTML = d["ipc"].toFixed(2);
+        document.getElementById('cycles-per-iteration-output').innerHTML = d["cycles_per_iteration"].toFixed(2);
+
+
         usage = {}
         usage['dispatch'] = (d["ipc"] / processorInfo.stages.dispatch) * 100;
         usage['execute'] = (d["ipc"] / processorInfo.stages.execute) * 100;
@@ -363,6 +370,13 @@ function showCriticalPathsGraph() {
 }
 
 function getSchedulerAnalysis() {
+    showProcessor();
+
+    document.getElementById('instructions-output').innerHTML = '?';
+    document.getElementById('cycles-output').innerHTML = '?';
+    document.getElementById('IPC-output').innerHTML = '?';
+    document.getElementById('cycles-per-iteration-output').innerHTML = '?';
+
     document.getElementById('run-simulation-spinner').style.display = 'block';
     document.getElementById('run-simulation-text').style.display = 'none';
     document.getElementById('run-simulation-button').disabled = true;
