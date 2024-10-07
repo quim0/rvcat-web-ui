@@ -2,6 +2,9 @@
 var lastExecutedCommand = null;
 var processorInfo = null;
 
+const MAX_PROGRAM_ITERATIONS = 3000;
+const MAX_ROB_SIZE = 500;
+
 const handlers = {
     'get_programs': (data) => {
         let programs = JSON.parse(data);
@@ -41,6 +44,7 @@ const handlers = {
         let procinfo = JSON.parse(data);
         processorInfo = procinfo;
         showProcessor();
+        getSchedulerAnalysis();
     },
     'generate_dependencies_graph': (data) => {
         let item = document.getElementById('simulation-output');
@@ -63,6 +67,44 @@ const handlers = {
         item.innerHTML = '';
         createGraphVizGraph(data, item);
         selectButton(document.getElementById('critical-paths-output'));
+
+    },
+    'generate_scheduler_analysis': (data) => {
+        /*
+        {"total_iterations": 10, "total_instructions": 90, "total_cycles": 91,
+        "ipc": 0.989010989010989, "cycles_per_iteration": 9.1, "critical_path":
+        {"instructions": [{"instruction": 0, "percentage": 4.395604395604396},
+        {"instruction": 1, "percentage": 19.78021978021978}, {"instruction": 2,
+        "percentage": 4.395604395604396}, {"instruction": 3, "percentage":
+        21.978021978021978}, {"instruction": 4, "percentage":
+        43.956043956043956}, {"instruction": 5, "percentage":
+        3.2967032967032965}, {"instruction": 6, "percentage": 0.0},
+        {"instruction": 7, "percentage": 0.0}, {"instruction": 8, "percentage":
+        0.0}], "dispatch": 1.098901098901099, "retire": 1.098901098901099}}
+        */
+        let d = JSON.parse(data);
+        if (d['data_type'] === 'error') {
+            alert('Error running simulation');
+            document.getElementById('run-simulation-spinner').style.display = 'none';
+            document.getElementById('run-simulation-text').style.display = 'block';
+            document.getElementById('run-simulation-button').disabled = false;
+            return;
+        }
+        usage = {}
+        usage['dispatch'] = (d["ipc"] / processorInfo.stages.dispatch) * 100;
+        usage['execute'] = (d["ipc"] / processorInfo.stages.execute) * 100;
+        usage['retire'] = (d["ipc"] / processorInfo.stages.retire) * 100;
+        usage.ports = {}
+        let i = 0;
+        let keys = Object.keys(processorInfo.ports);
+        for (let key of keys) {
+            usage.ports[i] = d.ports[key];
+            i++;
+        }
+        createProcessorGraph(processorInfo.stages.dispatch, Object.keys(processorInfo.ports).length, processorInfo.stages.retire, usage);
+        document.getElementById('run-simulation-spinner').style.display = 'none';
+        document.getElementById('run-simulation-text').style.display = 'block';
+        document.getElementById('run-simulation-button').disabled = false;
 
     },
     'print_output': (data) => {
@@ -123,19 +165,32 @@ function currentProcessor() {
 }
 
 function currentIterations() {
-    let i = document.getElementById('num-iters').value;
-    return i;
+    let elem = document.getElementById('num-iters');
+    let i = elem.value;
+    if (i === '') {
+        elem.value = 100;
+    }
+    if (i > MAX_PROGRAM_ITERATIONS) {
+        elem.value = MAX_PROGRAM_ITERATIONS;
+    }
+    return elem.value;
 }
 
 function currentROBSize() {
     let rs = document.getElementById('rob-size').value;
+    if (rs === '') {
+        rs = 100;
+    }
+    if (rs > MAX_ROB_SIZE) {
+        rs = MAX_ROB_SIZE;
+    }
     return rs;
 }
 
 // Commands
 function programShow() {
     executeCode(
-        RVCAT_HEADER() + PROG_SHOW_ANNOTATED,
+        RVCAT_HEADER() + PROG_SHOW_EXECUTION,
         'prog_show'
     )
 
@@ -246,9 +301,9 @@ function createGraphVizGraph(dotCode, targetElement, callback=null) {
             });
 }
 
-function createProcessorGraph(dispatch, execute, retire) {
+function createProcessorGraph(dispatch, execute, retire, usage=null) {
     // Define your Graphviz DOT code
-    const dotCode = construct_processor_dot(dispatch, execute, retire);
+    const dotCode = construct_processor_dot(dispatch, execute, retire, usage);
     createGraphVizGraph(dotCode, document.getElementById('pipeline-graph'));
 }
 
@@ -304,4 +359,14 @@ function showCriticalPathsGraph() {
         'generate_critical_paths_graph'
     )
     lastExecutedCommand = showCriticalPathsGraph;
+}
+
+function getSchedulerAnalysis() {
+    document.getElementById('run-simulation-spinner').style.display = 'block';
+    document.getElementById('run-simulation-text').style.display = 'none';
+    document.getElementById('run-simulation-button').disabled = true;
+    executeCode(
+        RVCAT_HEADER() + RUN_PROGRAM_ANALYSIS,
+        'generate_scheduler_analysis'
+    );
 }

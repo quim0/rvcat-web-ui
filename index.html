@@ -46,6 +46,20 @@
                     </tbody>
                 </table>
             </div>
+            <div class="scale-container">
+                <!-- Color scale bar -->
+                <div class="color-scale">
+                    <!-- Example pointer (optional) -->
+                    <!-- <div class="pointer"></div> -->
+                </div>
+
+                <!-- Optional scale labels -->
+                <div class="scale-labels">
+                    <span>Underutilized</span>
+                    <span></span>
+                    <span>Saturated</span>
+                </div>
+            </div>
         </section>
 
         <!-- Main Content Row -->
@@ -65,10 +79,13 @@
                     </select>
 
                     <label for="iterations">Number of Iterations:</label>
-                    <input type="number" id="num-iters" name="iterations" min="1" max="10000" value="10">
+                    <input type="number" id="num-iters" name="iterations" min="1" max="3000" value="200" >
 
                     <label for="rob-size">ROB Size:</label>
-                    <input type="number" id="rob-size" name="rob-size" min="1" max="10000" value="100">
+                    <input type="number" id="rob-size" name="rob-size" min="1" max="1000" value="100" >
+                    <button id="run-simulation-button" type="button" onclick="getSchedulerAnalysis();">
+                        <div id="run-simulation-spinner" class="spinner-small" style="display: none;"></div>
+                        <div id="run-simulation-text">Run simulation</div></button>
                 </form>
             </section>
 

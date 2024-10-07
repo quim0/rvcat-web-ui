@@ -10,6 +10,9 @@ rvcat._processor.list_processors_json()
 const PROG_SHOW              = 'str(rvcat._program)'
 const PROG_SHOW_DEPENDENCIES = `rvcat._program.show_dependencies()`
 const PROG_SHOW_DEPENDENCIES_GRAPHVIZ = `rvcat._program.get_dependencies_grapviz(num_iters=3)`
+function prog_show_dependencies_graphviz(num_iters) {
+    return `rvcat._program.get_dependencies_grapviz(num_iters=${num_iters})`
+}
 const PROG_SHOW_CRITICAL_PATHS_GRAPHVIZ = `rvcat._program.get_recurrent_paths_graphviz()`
 const PROG_SHOW_ANNOTATED    = `rvcat._program.annotate_action()`
 const PROG_SHOW_EXECUTION    = `rvcat._program.annotate_execution()`
@@ -28,7 +31,7 @@ const RUN_PROGRAM_PREAMBLE = function() {
     return res;
 }
 const RUN_PROGRAM_TIMELINE = 'rvcat._scheduler.format_timeline()'
-const RUN_PROGRAM_ANALYSIS = 'rvcat._scheduler.format_analysis()'
+const RUN_PROGRAM_ANALYSIS = 'rvcat._scheduler.format_analysis_json()'
 const RUN_PROGRAM_MEMTRACE = 'rvcat._scheduler.format_memtrace()'
 
 const RVCAT_HEADER = function() {
@@ -40,6 +43,7 @@ const RVCAT_HEADER = function() {
     }
     if (prog !== undefined) {
     res += `rvcat._program.load_program('${currentProgram()}')\n`
+    res += RUN_PROGRAM_PREAMBLE();
     }
     return res;
 }

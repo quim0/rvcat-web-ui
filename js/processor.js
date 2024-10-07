@@ -60,14 +60,37 @@ const PROCESSOR_GRAPH_PREAMBLE = `digraph {
     rankdir="LR";
 `
 
-function construct_processor_dot(dispatch_width, num_ports, retire_width) {
+function construct_processor_dot(dispatch_width, num_ports, retire_width, usage=null) {
     let dot_code = PROCESSOR_GRAPH_PREAMBLE;
+
+    // Colorscale from green to red
+    let color = [
+        "#00FF00",
+        "#33FF00",
+        "#66FF00",
+        "#99FF00",
+        "#CCFF00",
+        "#FFFF00",
+        "#FFCC00",
+        "#FF9900",
+        "#FF6600",
+        "#FF3300",
+        "#FF0000"
+    ];
+
+    console.log("Usage:");
+    console.log(usage);
 
     // --- DISPATCH ---
     dot_code += `
     Fetch[style=invis,shape=box,height=1]
-    Dispatch[shape=box,height=1.5,width=1.5,label="Dispatch\nw=${dispatch_width}"]
     `
+    if (usage !== null) {
+        let dispatch_color = color[Math.floor(usage.dispatch / 10)];
+        dot_code += `Dispatch[shape=box,height=1.5,width=1.5,label="Dispatch\nw=${dispatch_width}\n", style=filled, fillcolor="${dispatch_color}"]\n`
+    } else {
+        dot_code += `Dispatch[shape=box,height=1.5,width=1.5,label="Dispatch\nw=${dispatch_width}"]\n`
+    }
     for (let i = 0; i < dispatch_width; i++) {
         dot_code += `Fetch:e${i} -> Dispatch:w${i}\n`
     }
@@ -77,7 +100,12 @@ function construct_processor_dot(dispatch_width, num_ports, retire_width) {
         rankdir="LR";
     `
     for (let i = 0; i < num_ports; i++) {
-        dot_code += `P${i} [shape=box3d,height=0.15];\n`
+        if (usage !== null) {
+            let execute_color = color[Math.floor(usage.ports[i] / 10)];
+            dot_code += `P${i} [shape=box3d,height=0.15, style=filled, fillcolor="${execute_color}"];\n`
+        } else {
+            dot_code += `P${i} [shape=box3d,height=0.15];\n`
+        }
     }
 
     dot_code += `label = "Execute";
@@ -96,8 +124,14 @@ function construct_processor_dot(dispatch_width, num_ports, retire_width) {
     }
 
     // --- RETIRE ---
+    if (usage !== null) {
+        let retire_color = color[Math.floor(usage.retire / 10)];
+        dot_code += `Retire[shape=box,height=1.5,width=1.5,label="Retire\nw=${retire_width}", style=filled, fillcolor="${retire_color}"]`
+    } else {
+        dot_code += `Retire[shape=box,height=1.5,width=1.5,label="Retire\nw=${retire_width}"]`
+    }
+
     dot_code += `
-    Retire[shape=box,height=1.5,width=1.5,label="Retire\nw=${retire_width}"]
     Ret[style=invis,shape=box,height=1.5]
     `
     for (let i = 0; i < num_ports; i++) {
