@@ -354,14 +354,25 @@ function showProcessor() {
 }
 
 function showDependenciesGraph() {
+    let controls = document.getElementById('dependencies-controls');
+    controls.style.display = 'block';
+    let num_iters = document.getElementById('dependencies-num-iters').value;
+    if (num_iters === '') {
+        num_iters = 3;
+    }
+    if (num_iters > 10) {
+        num_iters = 10;
+    }
     executeCode(
-        RVCAT_HEADER() + PROG_SHOW_DEPENDENCIES_GRAPHVIZ,
+        RVCAT_HEADER() + prog_show_dependencies_graphviz(num_iters),
         'generate_dependencies_graph'
     )
     lastExecutedCommand = showDependenciesGraph;
 }
 
 function showCriticalPathsGraph() {
+    let controls = document.getElementById('dependencies-controls');
+    controls.style.display = 'none';
     executeCode(
         RVCAT_HEADER() + PROG_SHOW_CRITICAL_PATHS_GRAPHVIZ,
         'generate_critical_paths_graph'

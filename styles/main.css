@@ -423,3 +423,25 @@ footer a:hover {
     top: -5px;
     left: 60%; /* Example: 60% of the scale */
 }
+
+
+.simulation-results-controls {
+    display: none;
+}
+
+.input-simulation-result {
+    max-width: 100px;
+
+    display: block;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.simulation-results-controls-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
