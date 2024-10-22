@@ -19,6 +19,11 @@ const PROG_SHOW_EXECUTION    = `rvcat._program.annotate_execution()`
 const PROG_SHOW_MEMORY       = `rvcat._program.show_memory_trace()`
 const PROG_SHOW_STATIC_PERFORMANCE = `rvcat._program.show_static_performance_analysis()`
 
+const SHOW_TIMELINE = 'rvcat._scheduler.format_timeline()'
+function show_timeline(num_iters) {
+    return `rvcat._scheduler.format_timeline(niters=${num_iters})`
+}
+
 // SHOW processor
 const SHOW_PROCESSOR = 'rvcat._processor.json()'
 

@@ -253,8 +253,9 @@ pre {
     padding: 10px;
     border-radius: 5px;
     overflow-x: auto;
-    white-space: pre-wrap; /* Ensure long lines wrap */
+    /* white-space: pre-wrap; /* Ensure long lines wrap */
     box-sizing: border-box;
+    display: block;
     font-size: 125%;
 }
 
@@ -355,6 +356,12 @@ footer a:hover {
     margin: auto;
     font-weight: bold;
     text-align: center;
+}
+
+/* timeline */
+.large-code-output {
+    overflow: scroll;
+    overflow-y: scroll;
 }
 
 /* Spinner animation */

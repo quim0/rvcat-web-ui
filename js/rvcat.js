@@ -114,6 +114,37 @@ const handlers = {
         document.getElementById('run-simulation-button').disabled = false;
 
     },
+    'format_timeline': (data) => {
+            let tmpitem = document.getElementById('simulation-output');
+            tmpitem.innerHTML = '';
+
+            let item = document.getElementById('simulation-output');
+            // new div with class code-block
+            let codeItem = document.createElement('div');
+            codeItem.classList.add('code-block');
+
+            let pre = document.createElement('pre');
+
+            // \033[91m
+            // \033[0m
+            // replace all \033[91m with <span style="color: red">
+            // replace all \033[0m with </span>
+            data = data.replace(/\033\[91m/g, '<span style="color: red">');
+            data = data.replace(/\033\[0m/g, '</span>');
+
+            // new <code> with ID timeline-output
+            let code = document.createElement('code');
+            code.id = 'timeline-output';
+            code.classList.add('large-code-output');
+            code.innerHTML = data;
+
+            // append code to codeItem
+            pre.appendChild(code);
+            codeItem.appendChild(pre);
+            item.appendChild(codeItem);
+
+            selectButton(document.getElementById('timeline-output'));
+    },
     'print_output': (data) => {
         let out = data.replace(/\n/g, '<br>');
         console.log(out);
@@ -362,6 +393,7 @@ function showDependenciesGraph() {
     }
     if (num_iters > 10) {
         num_iters = 10;
+        document.getElementById('dependencies-num-iters').value = 10;
     }
     executeCode(
         RVCAT_HEADER() + prog_show_dependencies_graphviz(num_iters),
@@ -395,4 +427,23 @@ function getSchedulerAnalysis() {
         RVCAT_HEADER() + RUN_PROGRAM_ANALYSIS,
         'generate_scheduler_analysis'
     );
+}
+
+function getTimeline() {
+    let controls = document.getElementById('dependencies-controls');
+    controls.style.display = 'block';
+    let num_iters = document.getElementById('dependencies-num-iters').value;
+    if (num_iters === '') {
+        num_iters = 3;
+    }
+    if (num_iters > 50) {
+        num_iters = 50;
+        document.getElementById('dependencies-num-iters').value = 50;
+    }
+
+    executeCode(
+        RVCAT_HEADER() + show_timeline(num_iters),
+        'format_timeline'
+    )
+    lastExecutedCommand = getTimeline;
 }
